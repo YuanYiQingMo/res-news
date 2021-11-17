@@ -1,8 +1,24 @@
 <template>
     <div id="app">
         <div id="nav">
-            <div style="width:100vw;height:48px;background-color:#FFFFFF"></div>
-            <div style="width:100vw;height:32px;background-color:#409EFF"></div>
+            <div
+                style="
+                    width: 100vw;
+                    height: 48px;
+                    background-color: #ffffff;
+                    font-size: 18px;
+                    text-align: left;
+                    font-weight: bolder;
+                    line-height: 48px
+                "
+            >
+                <div style="margin: 0 24px">
+                    接入式新闻推荐算法测评平台
+                </div>
+            </div>
+            <div
+                style="width: 100vw; height: 32px; background-color: #409eff"
+            ></div>
         </div>
         <router-view />
     </div>

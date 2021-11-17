@@ -30,18 +30,19 @@
                             >
                             <el-col :span="12">
                                 <el-radio-group
-                                    v-model="switchSortnum"
+                                    v-model="switchSort"
                                     class="switchbtn"
+                                    @change="changSO"
                                 >
                                     <el-radio-button
-                                        label="8"
+                                        label="block"
                                         class="switchbtn"
                                         size="medium"
                                     >
                                         <i class="el-icon-menu icon"></i>
                                     </el-radio-button>
                                     <el-radio-button
-                                        label="22"
+                                        label="row"
                                         class="switchbtn"
                                         size="medium"
                                     >
@@ -63,7 +64,8 @@
                         </el-button>
                     </el-col>
                 </el-row>
-                <el-row gutter="40">
+                <!-- 块状列表 -->
+                <el-row gutter="40" v-show="changSort">
                     <!-- 有数据后使用这段代码 -->
                     <!-- <el-col v-for="item in testList" :key="item.id" :span="8">
                         <el-card>
@@ -80,8 +82,7 @@
                             </el-row>
                         </el-card>
                     </el-col> -->
-                    <!-- 测试css -->
-                    <el-col :span="switchSortnum" class="testCard">
+                    <el-col :span="8" class="testCard">
                         <el-card>
                             <el-row>
                                 <el-col :span="24" class="testName">
@@ -96,14 +97,29 @@
                                     数据集：英文数据集1
                                 </el-col>
                             </el-row>
-                            <el-row type="flex" justify="around" style="margin:56px 0 0 0">
+                            <el-row
+                                type="flex"
+                                justify="around"
+                                style="margin: 56px 0 0 0"
+                            >
                                 <!-- 这里传入数据 -->
-                                <el-button type="primary" plain class="cardBoxbtn" @click="edit()">编辑</el-button>
-                                <el-button type="primary" class="cardBoxbtn" to="/About">查看</el-button>
+                                <el-button
+                                    type="primary"
+                                    plain
+                                    class="cardBoxbtn"
+                                    @click="edit()"
+                                    >编辑</el-button
+                                >
+                                <el-button
+                                    type="primary"
+                                    class="cardBoxbtn"
+                                    @click="checktest()"
+                                    >查看</el-button
+                                >
                             </el-row>
                         </el-card>
                     </el-col>
-                    <el-col :span="switchSortnum" class="testCard">
+                    <el-col :span="8" class="testCard">
                         <el-card>
                             <el-row>
                                 <el-col :span="24" class="testName">
@@ -118,11 +134,45 @@
                                     数据集：英文数据集1
                                 </el-col>
                             </el-row>
-                            <el-row type="flex" justify="around" style="margin:56px 0 0 0">
-                                <el-button type="primary" plain class="cardBoxbtn">编辑</el-button>
-                                <el-button type="primary" class="cardBoxbtn" >查看</el-button>
+                            <el-row
+                                type="flex"
+                                justify="around"
+                                style="margin: 56px 0 0 0"
+                            >
+                                <el-button
+                                    type="primary"
+                                    plain
+                                    class="cardBoxbtn"
+                                    >编辑</el-button
+                                >
+                                <el-button type="primary" class="cardBoxbtn"
+                                    >查看</el-button
+                                >
                             </el-row>
                         </el-card>
+                    </el-col>
+                </el-row>
+                <!-- 平铺式的列表 -->
+                <el-row v-show="!changSort">
+                    <el-col :span="24">
+                        <!-- TODO 这里等待接口看看是啥要再写吧 -->
+                        <el-table :data="Data">
+                            <el-table-column label="测评名称" sortable></el-table-column>
+                            <el-table-column label="被测算法" sortable></el-table-column>
+                            <el-table-column label="数据集" sortable></el-table-column>
+                            <el-table-column label="AUC" sortable></el-table-column>
+                            <el-table-column label="操作">
+                                <template slot-scope="scope">
+                                    <el-button
+                                    size="mini"
+                                    @click="handleEdit(scope.$index, scope.row)">编辑</el-button>
+                                    <el-button
+                                    size="mini"
+                                    plain
+                                    @click="handleDelete(scope.$index, scope.row)">查看</el-button>
+                                </template>
+                            </el-table-column>
+                        </el-table>
                     </el-col>
                 </el-row>
                 <!-- 这里是点击按钮后的弹出框 -->
@@ -140,6 +190,7 @@
                         <el-col :span="4" push="1"> 测评名称 </el-col>
                         <el-col :span="16" push="2">
                             <el-input
+                                type="text"
                                 size="large"
                                 v-model="addedTestName"
                             ></el-input>
@@ -255,12 +306,23 @@
                             </el-radio-group>
                         </el-col>
                     </el-row>
-                    <el-row type="flex" justify="center" style="margin:48px">
+                    <el-row type="flex" justify="center" style="margin: 48px">
                         <el-col :span="8">
-                            <el-button round plain @click="dialogVisible = flase">取消</el-button>
+                            <el-button
+                                round
+                                plain
+                                @click="dialogVisible = flase"
+                                >取消</el-button
+                            >
                         </el-col>
                         <el-col :span="8" push="6">
-                            <el-button round plain type="primary" @click="addtest">添加测评</el-button>
+                            <el-button
+                                round
+                                plain
+                                type="primary"
+                                @click="addtest"
+                                >添加测评</el-button
+                            >
                         </el-col>
                     </el-row>
                 </el-dialog>
@@ -270,18 +332,18 @@
 </template>
 
 <script>
-// @ is an alias to /src
-
 export default {
     name: "Home",
     data() {
         return {
-            switchSortnum: 8,
+            switchSort: "block",
+            changSort: true,
             dialogVisible: false,
             //dialog里的变量
-            addedTEstName: "",
+            addedTestName: "",
             testAlgorithm: "",
             dataGroup: "",
+            Data:[],
         };
     },
 
@@ -292,15 +354,26 @@ export default {
         addtestdialog() {
             this.dialogVisible = true;
         },
-        addtest(){
-            this.$message('asdaw')
+        addtest() {
+            this.$message("asdaw");
         },
-        edit(addedTEstName, testAlgorithm, dataGroup){
-            this.addedTEstName = addedTEstName;
+        edit(addedTestName, testAlgorithm, dataGroup) {
+            this.addedTestName = addedTestName;
             this.testAlgorithm = testAlgorithm;
             this.dataGroup = dataGroup;
             this.dialogVisible = true;
-        }
+        },
+        checktest() {
+            this.$message("查看了");
+            this.$router.push('About');
+        },
+        changSO(label) {
+            if (label === "block") {
+                this.changSort = true;
+            } else {
+                this.changSort = false;
+            }
+        },
     },
 };
 </script>
@@ -316,7 +389,7 @@ export default {
     }
     .testCard {
         margin: 24px;
-        .cardBoxbtn{
+        .cardBoxbtn {
             margin: 0 32px;
             font-size: 24px;
             padding: 18px 50px;
