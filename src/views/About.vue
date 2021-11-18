@@ -1,7 +1,7 @@
 <template>
     <el-row type="flex" justify="center" id="aboutCard">
         <el-col :span="20">
-            <el-card body-style="min-height:800px">
+            <el-card body-style="min-height:800px;" style="border-radius:10px;">
                 <el-row type="flex" justify="start" align="middle">
                     <el-col :span="24" class="head">
                         <i class="el-icon-arrow-left" @click="goback"></i>
@@ -11,23 +11,11 @@
                 </el-row>
                 <el-row id="tableDetails">
                     <!-- 表格排版 -->
-                    <el-row>
-                        <el-col :span="16" class="container" style="height:400px"> 准确度 </el-col>
-                        <el-col :span="8">
-                            <el-row>
-                                <el-row class="container"> 多样度</el-row>
-                                <el-row class="container"> 鲁棒度 </el-row>
-                            </el-row>
-                        </el-col>
-                    </el-row>
-                    <el-row>
-                        <el-col :span="12" class="container" style="height:100px"> 隐私度  </el-col>
-                        <el-col :span="12" class="container" style="height:100px">  覆盖度  </el-col>
-                    </el-row>
+                    <analysis-dialog></analysis-dialog>
                 </el-row>
                 <el-row>
                     <el-col :span="24">
-                        <el-button type="primary" plain style="font-size: 24px" @click="startSimulation" v-loading.fullscreen.lock="fullscreenLoading" element-loading-text="这可能需要十分钟">
+                        <el-button type="primary" plain style="font-size: 18px;padding:15px; border-radius:8px" @click="startSimulation" v-loading.fullscreen.lock="fullscreenLoading" element-loading-text="这可能需要十分钟">
                             模拟推荐
                         </el-button>
                     </el-col>
@@ -37,9 +25,19 @@
     </el-row>
 </template>
 <script>
-export default { 
+
+import AnalysisDialog from "@/components/AnalysisDialog";
+export default {
+    components:{
+        AnalysisDialog
+    },
     data() {
         return {
+            //表格数据
+            dialogVisible:true,
+            analysisNews:{},
+            historyAttentions:[],
+            historyList:[],
             //从和后端拿到的数据
             test: "",
             fullscreenLoading:false,
@@ -56,8 +54,10 @@ export default {
                 this.fullscreenLoading = false;
                 this.$message("好勒");
             }, 2000);
-        }
+        },
     },
+    mounted(){
+    }
 };
 </script>
 <style lang="scss" scoped>
@@ -71,7 +71,8 @@ export default {
         margin-right: 12px;
     }
     text-align: left;
-    font-size: 48px;
+    font-size: 18px;
+    margin-bottom: 24px;
 }
 #tableDetails {
     margin: 24px;

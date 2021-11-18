@@ -16,7 +16,7 @@ import { GridComponent, TooltipComponent } from "echarts/components";
 use([CanvasRenderer, BarChart, GridComponent, TooltipComponent]);
 Vue.component("v-chart", ECharts);
 
-Vue.config.productionTip = true;
+Vue.config.productionTip = false;
 Vue.use(ElementUI, { locale });
 Vue.use(VueAxios,axios)
 

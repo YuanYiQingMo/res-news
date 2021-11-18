@@ -1,7 +1,7 @@
 <template>
     <el-row type="flex" justify="center" id="mainCard">
         <el-col :span="20">
-            <el-card body-style="min-height:800px">
+            <el-card body-style="min-height:800px" style="border-radius: 10px">
                 <el-row
                     type="flex"
                     justify="start"
@@ -9,12 +9,12 @@
                     id="homeHead"
                     gutter="32"
                 >
-                    <el-col :span="14">
+                    <el-col :span="16">
                         <el-row type="flex" justify="start" align="middle">
                             <div
                                 style="
-                                    height: 48px;
-                                    width: 5px;
+                                    height: 40px;
+                                    width: 4px;
                                     background-color: #409eff;
                                     display: inline-block;
                                     margin: 0 20px 0 0;
@@ -23,41 +23,20 @@
                             新闻推荐算法测评列表
                         </el-row>
                     </el-col>
-                    <el-col :span="6">
-                        <el-row type="flex" justify="start" align="middle">
-                            <el-col :span="12" style="margin: 0 12px"
-                                >对比评测</el-col
-                            >
-                            <el-col :span="12">
-                                <el-radio-group
-                                    v-model="switchSort"
-                                    class="switchbtn"
-                                    @change="changSO"
-                                >
-                                    <el-radio-button
-                                        label="block"
-                                        class="switchbtn"
-                                        size="medium"
-                                    >
-                                        <i class="el-icon-menu icon"></i>
-                                    </el-radio-button>
-                                    <el-radio-button
-                                        label="row"
-                                        class="switchbtn"
-                                        size="medium"
-                                    >
-                                        <i class="el-icon-minus icon"></i><br />
-                                        <!-- <i class="el-icon-minus"></i><br>
-                                        <i class="el-icon-minus"></i> -->
-                                    </el-radio-button>
-                                </el-radio-group>
-                            </el-col>
-                        </el-row>
-                    </el-col>
-                    <el-col :span="4">
+                    <el-col :span="3">
                         <el-button
-                            id="addTestbtn"
                             type="primary"
+                            @click="changSO"
+                            class="mainbtn"
+                        >
+                            {{ switchSort }}
+                        </el-button>
+                    </el-col>
+                    <el-col :span="3">
+                        <el-button
+                            class="mainbtn"
+                            type="primary"
+                            plain
                             @click="addtestdialog"
                         >
                             添加测评
@@ -83,7 +62,7 @@
                         </el-card>
                     </el-col> -->
                     <el-col :span="8" class="testCard">
-                        <el-card>
+                        <el-card style="border-radius: 10px">
                             <el-row>
                                 <el-col :span="24" class="testName">
                                     NAML英文测评
@@ -106,14 +85,14 @@
                                 <el-button
                                     type="primary"
                                     plain
-                                    class="cardBoxbtn"
+                                    class="cardBoxbtn mainbtn"
                                     @click="edit()"
                                     >编辑</el-button
                                 >
                                 <el-button
                                     type="primary"
-                                    class="cardBoxbtn"
-                                    @click="checktest()"
+                                    class="cardBoxbtn mainbtn"
+                                    @click="checktest(item)"
                                     >查看</el-button
                                 >
                             </el-row>
@@ -142,34 +121,60 @@
                                 <el-button
                                     type="primary"
                                     plain
-                                    class="cardBoxbtn"
+                                    class="cardBoxbtn mainbtn"
                                     >编辑</el-button
                                 >
-                                <el-button type="primary" class="cardBoxbtn"
+                                <el-button
+                                    type="primary"
+                                    class="cardBoxbtn mainbtn"
                                     >查看</el-button
                                 >
                             </el-row>
                         </el-card>
                     </el-col>
                 </el-row>
-                <!-- 平铺式的列表 -->
+                <!-- 平铺式的列表 数据集 -->
                 <el-row v-show="!changSort">
                     <el-col :span="24">
                         <!-- TODO 这里等待接口看看是啥要再写吧 -->
                         <el-table :data="Data">
-                            <el-table-column label="测评名称" sortable></el-table-column>
-                            <el-table-column label="被测算法" sortable></el-table-column>
-                            <el-table-column label="数据集" sortable></el-table-column>
-                            <el-table-column label="AUC" sortable></el-table-column>
+                            <el-table-column
+                                prop="name"
+                                label="测评名称"
+                                sortable
+                            ></el-table-column>
+                            <el-table-column
+                                label="被测算法"
+                                sortable
+                            ></el-table-column>
+                            <el-table-column
+                                label="数据集"
+                                sortable
+                            ></el-table-column>
+                            <el-table-column
+                                label="AUC"
+                                sortable
+                            ></el-table-column>
                             <el-table-column label="操作">
                                 <template slot-scope="scope">
                                     <el-button
-                                    size="mini"
-                                    @click="handleEdit(scope.$index, scope.row)">编辑</el-button>
+                                        size="mini"
+                                        @click="
+                                            handleEdit(scope.$index, scope.row)
+                                        "
+                                        >编辑</el-button
+                                    >
                                     <el-button
-                                    size="mini"
-                                    plain
-                                    @click="handleDelete(scope.$index, scope.row)">查看</el-button>
+                                        size="mini"
+                                        plain
+                                        @click="
+                                            handleDelete(
+                                                scope.$index,
+                                                scope.row
+                                            )
+                                        "
+                                        >查看</el-button
+                                    >
                                 </template>
                             </el-table-column>
                         </el-table>
@@ -211,44 +216,25 @@
                                 style="width: 80%"
                             >
                                 <el-row>
-                                    <el-col :span="4">
-                                        <el-radio-button label="Naml">
-                                            <span class="addtestRadio">
-                                                Naml
-                                            </span>
-                                        </el-radio-button>
-                                    </el-col>
-                                    <el-col :span="4">
-                                        <el-radio-button label="NRMS">
-                                            <span class="addtestRadio">
-                                                NRMS
-                                            </span>
-                                        </el-radio-button>
-                                    </el-col>
-                                    <el-col :span="4">
-                                        <el-radio-button label="LSTUR">
-                                            <span class="addtestRadio">
-                                                LSTUR
-                                            </span>
-                                        </el-radio-button>
-                                    </el-col>
-                                    <el-col :span="4">
-                                        <el-radio-button label="Naml">
-                                            <span class="addtestRadio">
-                                                Naml
-                                            </span>
-                                        </el-radio-button>
-                                    </el-col>
-                                    <el-col :span="8">
-                                        <el-radio-button
-                                            label="导入算法"
-                                            disabled
-                                        >
-                                            <span class="addtestRadio">
-                                                导入算法
-                                            </span>
-                                        </el-radio-button>
-                                    </el-col>
+                                    <el-radio-button label="Naml">
+                                        <span class="addtestRadio"> Naml </span>
+                                    </el-radio-button>
+                                    <el-radio-button label="NRMS">
+                                        <span class="addtestRadio"> NRMS </span>
+                                    </el-radio-button>
+                                    <el-radio-button label="LSTUR">
+                                        <span class="addtestRadio">
+                                            LSTUR
+                                        </span>
+                                    </el-radio-button>
+                                    <el-radio-button label="Naml">
+                                        <span class="addtestRadio"> Naml </span>
+                                    </el-radio-button>
+                                    <el-radio-button label="导入算法" disabled>
+                                        <span class="addtestRadio">
+                                            导入算法
+                                        </span>
+                                    </el-radio-button>
                                 </el-row>
                             </el-radio-group>
                         </el-col>
@@ -336,14 +322,14 @@ export default {
     name: "Home",
     data() {
         return {
-            switchSort: "block",
+            switchSort: "对比评测",
             changSort: true,
             dialogVisible: false,
             //dialog里的变量
             addedTestName: "",
             testAlgorithm: "",
             dataGroup: "",
-            Data:[],
+            Data: [],
         };
     },
 
@@ -363,17 +349,31 @@ export default {
             this.dataGroup = dataGroup;
             this.dialogVisible = true;
         },
-        checktest() {
-            this.$message("查看了");
+        checktest(item) {
+            this.$message("查看了" + item);
             this.$router.push('About');
+            // this.$router.push('/analysis/'+item.name);
         },
-        changSO(label) {
-            if (label === "block") {
-                this.changSort = true;
-            } else {
+        changSO() {
+            if (this.changSort) {
                 this.changSort = false;
+                this.switchSort = "测评列表";
+            } else {
+                this.changSort = true;
+                this.switchSort = "对比测评";
             }
         },
+    },
+    mounted() {
+        this.axios
+            .post("http://172.18.91.116:8080/evalution/list", {
+                pageNum: 1,
+                pageSize: 8,
+            })
+            .then((res) => {
+                let data = res.data;
+                this.Data = data.data;
+            });
     },
 };
 </script>
@@ -382,35 +382,31 @@ export default {
 #mainCard {
     padding: 24px 0;
     text-align: left;
-    font-size: 32px;
+    font-size: 18px;
     #homeHead {
         margin: 24px;
-        font-size: 32px;
+        font-size: 18px;
     }
     .testCard {
         margin: 24px;
         .cardBoxbtn {
             margin: 0 32px;
-            font-size: 24px;
-            padding: 18px 50px;
+            font-size: 16px;
+            padding: 12px 40px;
         }
     }
     .testName {
-        font-size: 32px;
+        font-size: 16px;
         font-weight: bolder;
-        margin: 24px 0;
-    }
-    .testData {
-        font-size: 24px;
         margin: 12px 0;
     }
-    .switchbtn {
-        .icon {
-            font-size: 32px;
-        }
+    .testData {
+        font-size: 16px;
+        margin: 12px 0;
     }
-    #addTestbtn {
-        font-size: 32px;
+    .mainbtn {
+        font-size: 16px;
+        border-radius: 8px;
     }
     .addtestRadio {
         font-size: 24px;
